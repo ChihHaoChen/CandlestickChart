@@ -1,41 +1,54 @@
-import { extent, NumberValue } from 'd3'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 import { Candle } from './components/CandlestickChart/Candle'
-
+import { IChart, IData, IChartArr } from '../model/date.model'
+import convertFetchedData from '../utils/convertFetchedData'
+import fetchChart from '../controllers/fetchChart'
 import CandlestickChartMine from './components/CandlestickChart/CandlestickChartMine'
 
 
 
-import data from '../data/data.json'
+import data from '../data/msft_response.json'
 
 const PADDING_HEIGHT = 20
-const candles = data.slice(0, 40)
+// const candles = data
 
-const getDomain = (rows: Candle[]): [number, number] => {
-  const values = rows.map(({high, low}) => [high, low]).flat()
+const getDomain = (rows: IChart[]): [number, number] => {
+  const values = rows.map(({high, low}:any) => [high, low]).flat()
   return [Math.min(...values) - PADDING_HEIGHT, Math.max(...values) + PADDING_HEIGHT]
 }
 
 
-const domain = getDomain(candles)
+// const domain = getDomain(candles)
 
 
-const App = () => (
-  <React.Fragment>
-    <CandlestickChartMine {...{ candles, domain }} />
-    <StyledButton>
-      Update data
-    </StyledButton>
-    <StyledButton>
-      Filter data
-    </StyledButton>
-    <StyledButton>
-      Add data
-    </StyledButton>
-    <GlobalStyle />
-  </React.Fragment>
-)
+const App = () => {
+  const [chartData, setChartData] = useState(data)
+  const [chartCandles, setChartCandles] = useState(convertFetchedData(chartData))
+  const [domain, setDomain] = useState<[number, number]>(getDomain(chartCandles['dataArr']))
+
+  
+  useEffect(() => {
+    setChartCandles(convertFetchedData(chartData))
+    setDomain(getDomain(chartCandles['dataArr']))
+  }, [chartData])
+
+  return (
+    <>
+      <CandlestickChartMine domain={domain} chartCandles={chartCandles} />
+      <StyledButton>
+        Update data
+      </StyledButton>
+      <StyledButton>
+        Filter data
+      </StyledButton>
+      <StyledButton>
+        Add data
+      </StyledButton>
+      <GlobalStyle />
+    </>
+  )
+}
 
 export default App;
 

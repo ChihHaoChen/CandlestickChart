@@ -2,13 +2,14 @@ import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import ResizeObserver from 'resize-observer-polyfill'
 import { select, Selection, BaseType, scaleLinear, scaleBand, axisLeft, axisBottom } from 'd3'
-import { Candle as CandleModel} from './Candle'
+import { Candle as CandleModel } from './Candle'
+import { IData, IChart } from '../../../model/date.model'
+import fetchChart from '../../../controllers/fetchChart'
 
-
-interface CandleChartProps {
-  candles: CandleModel[]
-  domain: [number, number]
-}
+// interface CandleChartProps {
+//   chartCandles: {IData, IChart[]}
+//   domain: [number, number]
+// }
 
 
 const useResizeObserver = (ref: any) => {
@@ -27,11 +28,14 @@ const useResizeObserver = (ref: any) => {
 };
 
 
-const CandlestickChartMine = ({ candles, domain }: CandleChartProps) => {
+const CandlestickChartMine = ({ chartCandles, domain }:any) => {
 
   const svgRef = useRef<SVGSVGElement | null>(null)
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const dimensions = useResizeObserver(wrapperRef)
+
+  const candles:IChart[] = chartCandles['dataArr']
+  fetchChart()
 
   // const dimensions = { width: 1920, height: 1080}
 

@@ -11,3 +11,7 @@ export interface IData {
   symbol: string
   timeZone: string
 }
+
+export interface IChartArr {
+  dataArr?: IChart[]
+}
