@@ -4,7 +4,9 @@
     "lib": [
       "dom",
       "dom.iterable",
-      "esnext"
+      "esnext",
+      "es6",
+      "scripthost"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -18,7 +20,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    // "outDir": "./dist",
+    // "sourceMap": true,
+    "jsx": "react-jsx",
+    "noImplicitAny": true
   },
   "include": [
     "src"

@@ -1,14 +1,13 @@
+import { extent, NumberValue } from 'd3'
 import React, { useState } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
-
-import BarChart from './components/BarChart/BarChart'
-import BarChart1 from './components/BarChart/BarChart1'
 import { Candle } from './components/CandlestickChart/Candle'
-// import CandlestickChart, { dimensionWidth, dimensionHeight } from './components/CandlestickChart/CandlestickChart'
+
 import CandlestickChartMine from './components/CandlestickChart/CandlestickChartMine'
 
 
-import data from './data/data.json'
+
+import data from '../data/data.json'
 
 const PADDING_HEIGHT = 20
 const candles = data.slice(0, 40)
@@ -25,8 +24,6 @@ const domain = getDomain(candles)
 const App = () => (
   <React.Fragment>
     <CandlestickChartMine {...{ candles, domain }} />
-  
-    {/* <BarChart1 initialData={initialData} /> */}
     <StyledButton>
       Update data
     </StyledButton>
@@ -51,11 +48,11 @@ margin: 0 auto 5px;
 
 const GlobalStyle = createGlobalStyle`
   body {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: center;
-    height: 100vh;
+    display: block;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    height: 1080px;
     padding: 0 50px;
   }
 `
