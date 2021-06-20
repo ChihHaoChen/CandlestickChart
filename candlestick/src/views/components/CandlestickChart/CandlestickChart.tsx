@@ -5,11 +5,6 @@ import { select, Selection, BaseType, scaleLinear, scaleBand, axisLeft, axisBott
 import { Candle as CandleModel } from './Candle'
 import { IData, IChart } from '../../../model/date.model'
 import fetchChart from '../../../controllers/fetchChart'
-import moment, { Moment } from 'moment'
-// interface CandleChartProps {
-//   chartCandles: {IData, IChart[]}
-//   domain: [number, number]
-// }
 
 
 const useResizeObserver = (ref: any) => {
