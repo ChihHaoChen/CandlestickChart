@@ -4,7 +4,7 @@ import { Candle } from './components/CandlestickChart/Candle'
 import { IChart, IData, IChartArr } from '../model/date.model'
 import convertFetchedData from '../utils/convertFetchedData'
 import fetchChart from '../controllers/fetchChart'
-import CandlestickChartMine from './components/CandlestickChart/CandlestickChartMine'
+import CandlestickChart from './components/CandlestickChart/CandlestickChart'
 
 
 
@@ -35,7 +35,7 @@ const App = () => {
 
   return (
     <>
-      <CandlestickChartMine domain={domain} chartCandles={chartCandles} />
+      <CandlestickChart domain={domain} chartCandles={chartCandles} />
       <StyledButton>
         Update data
       </StyledButton>
