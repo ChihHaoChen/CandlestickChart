@@ -44,6 +44,8 @@ const CandlestickChart = ({ chartCandles, domain }:any) => {
   const svgCandlesticks = select(svgCandlesticksRef.current)
   const svgAxis = select(svgAxisRef.current)
 
+  let zoomState = { k: 0, x: 0, y: 0}
+
   useEffect(() => {
     if (!dimensions || !dimensionsVolumeSVG) return
     

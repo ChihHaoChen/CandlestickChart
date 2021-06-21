@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
-import { Candle } from './components/CandlestickChart/Candle'
-import { IChart, IData, IChartArr } from '../model/date.model'
+import { IChart } from '../model/date.model'
 import convertFetchedData from '../utils/convertFetchedData'
 import fetchChart from '../controllers/fetchChart'
 import CandlestickChart from './components/CandlestickChart/CandlestickChart'
@@ -18,8 +17,6 @@ const getDomain = (rows: IChart[]): [number, number] => {
   return [Math.min(...values) - PADDING_HEIGHT, Math.max(...values) + PADDING_HEIGHT]
 }
 
-
-// const domain = getDomain(candles)
 
 
 const App = () => {
