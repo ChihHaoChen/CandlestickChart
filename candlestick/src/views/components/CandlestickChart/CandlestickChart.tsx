@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import ResizeObserver from 'resize-observer-polyfill'
-import { select, Selection, BaseType, scaleLinear, scaleBand, axisLeft, axisBottom, max, axisRight, timeMonth, timeFormat, timeDay } from 'd3'
-import { Candle as CandleModel } from './Candle'
+import { select, Selection, BaseType, scaleLinear, scaleBand, axisLeft, axisBottom, max, axisRight, zoom, zoomTransform } from 'd3'
 import { IData, IChart } from '../../../model/date.model'
-import fetchChart from '../../../controllers/fetchChart'
 
 
 const useResizeObserver = (ref: any) => {
@@ -23,11 +21,12 @@ const useResizeObserver = (ref: any) => {
 };
 
 
+
 const CandlestickChart = ({ chartCandles, domain }:any) => {
 
-  const svgAxisRef = useRef<SVGSVGElement | null>(null)
-  const svgVolumeAxisRef = useRef<SVGSVGElement | null>(null)
-  const svgCandlesticksRef = useRef<SVGSVGElement | null>(null)
+  const svgAxisRef = useRef(null)
+  const svgVolumeAxisRef = useRef(null)
+  const svgCandlesticksRef = useRef(null)
 
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const wrapperVolumeRef = useRef<HTMLDivElement | null>(null)
@@ -37,13 +36,21 @@ const CandlestickChart = ({ chartCandles, domain }:any) => {
 
   const candles:IChart[] = chartCandles['dataArr']
 
-  const svgAxis = select(svgAxisRef.current)
+
+  const [panSlide, setPanSlide] = useState(0)
+  const [currentZoomState, setCurrentZoomState] = useState({})
+  
   const svgVolumeAxis = select(svgVolumeAxisRef.current)
   const svgCandlesticks = select(svgCandlesticksRef.current)
+  const svgAxis = select(svgAxisRef.current)
 
   useEffect(() => {
     if (!dimensions || !dimensionsVolumeSVG) return
-
+    
+    const { width, height } = dimensions || wrapperRef.current?.getBoundingClientRect()
+    
+    const candlesChopped = ((panSlide + 30) < candles.length) ?  candles.slice(panSlide, 30 + panSlide) : candles
+    
     const scaleY = scaleLinear()
     .domain(domain)
     .range([dimensions.height, 0])
@@ -65,34 +72,37 @@ const CandlestickChart = ({ chartCandles, domain }:any) => {
       .domain(candles.map(d => d.date))
       .range([0, dimensions.width])
       .paddingInner(0.5)
-      
    
+    
     const xAxis: any = axisBottom(x)
       
-    const width = dimensions.width / candles.length
+    const widthCandelstick = width / candles.length
 
+    
     svgCandlesticks
       .selectAll('line')
       .data(candles)
       .join('line')
-      .attr('width', x.bandwidth)
-      .attr('x1', (_, index) => (index + 0.5) * width)
+      .attr('width', 1)
+      .attr('x1', (_, index) => (index + 0.5) * widthCandelstick)
       .attr('y1', d => scaleY(d.low))
-      .attr('x2', (_, index) => (index + 0.5) * width)
+      .attr('x2', (_, index) => (index + 0.5) * widthCandelstick)
       .attr('y2', d => scaleY(d.high))
       .style('stroke', d => d.open < d.close ? ' #01b61a ' : 'red')
+      
       
     svgCandlesticks
       .selectAll('rect')
       .data(candles)
       .join('line')
-      .attr('width', x.bandwidth)
-      .attr('x1', (_, index) => (index + 0.5) * width)
+      .attr('width', 1)
+      .attr('x1', (_, index) => (index + 0.5) * widthCandelstick)
       .attr('y1', d => scaleY(d.open))
-      .attr('x2', (_, index) => (index + 0.5) * width)
+      .attr('x2', (_, index) => (index + 0.5) * widthCandelstick)
       .attr('y2', d => scaleY(d.close))
       .style('stroke', d => d.open < d.close ? ' #01b61a ' : 'red')
-      .style('stroke-width', width * 0.5)
+      .style('stroke-width', widthCandelstick * 0.5)
+      
     
     svgVolumeAxis
       .selectAll('rect')
@@ -109,29 +119,40 @@ const CandlestickChart = ({ chartCandles, domain }:any) => {
       
     
     svgAxis
-    .selectAll('.x-axis')
-    .data([true])
-    .join('g')
+    .select('.x-axis')
     .style('transform', `translateY(${dimensions.height}px)`)
     .attr('class', 'x-axis')
     .call(xAxis)
     
   
     svgAxis
-      .selectAll('.y-axis')
+      .select('.y-axis')
       .join('g')
       .attr('class', 'y-axis')
       .call(yAxis)
     
+    
     svgVolumeAxis
-      .selectAll('.yVolume-axis')
+      .select('.yVolume-axis')
       .join('g')
       .style("transform", `translateX(${dimensions.width}px)`)
       .attr('class', 'yVolume-axis')
       .call(volumeAxis)
+    
 
-   
-  }, [candles, dimensions, domain, svgAxis, svgVolumeAxis, dimensionsVolumeSVG, svgCandlesticks])
+
+    const zoomBehavior: any = zoom()
+      .scaleExtent([0.5, 5])
+      .translateExtent([[0, 0], [width, height]]).on("zoom", () => {
+        
+        const zoomState = zoomTransform(svgCandlesticks.node() as unknown as Element)
+        
+        setCurrentZoomState(zoomState)      
+      })
+
+    svgCandlesticks.call(zoomBehavior)
+
+  }, [candles, dimensions, domain, dimensionsVolumeSVG, currentZoomState])
 
   return (
     <StyledChartWrapper ref={wrapperRef}>
