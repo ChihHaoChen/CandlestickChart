@@ -14,7 +14,7 @@ const usePrevious = (value: any) => {
   return ref.current;
 }
 
-const CandlestickChart = ({ chartCandles, domain }:any) => {
+const CandlestickChart = ({ chartCandles }:any) => {
 
   const svgAxisRef = useRef(null)
   const svgVolumeAxisRef = useRef(null)
@@ -27,7 +27,7 @@ const CandlestickChart = ({ chartCandles, domain }:any) => {
   const dimensionsVolumeSVG = useResizeObserver(wrapperVolumeRef)
 
   const candles:IChart[] = chartCandles['dataArr']
-
+  const domain:[number, number] = chartCandles['yDomain']
 
   const [widthCandlestick, setWidthCandlestick] = useState(0)
   const [currentZoomState, setCurrentZoomState] = useState<any>()
@@ -47,21 +47,17 @@ const CandlestickChart = ({ chartCandles, domain }:any) => {
     const scaleY = scaleLinear()
     .domain(domain)
     .range([height, 0])
-    .clamp(true)
-    
   
     const yAxis: any = axisLeft(scaleY)
       .tickFormat(d => `$${d}`)
     
     const scaleVolume = scaleLinear()
-      .domain([0, max(candles, d => d.volume)!])
+      .domain([0, max(candles, d => d.volume/1000)!])
       .range([height*0.2, 0])
-      .clamp(true)
     
     const volumeAxis: any = axisRight(scaleVolume)
-      .tickFormat(d => `${d}`)
+      .tickFormat((d:any) => `${d/1000}K`)
       
-    
     const x = scaleBand()
       .domain(candles.map(d => d.date))
       .range([0, width])
@@ -113,7 +109,7 @@ const CandlestickChart = ({ chartCandles, domain }:any) => {
       .attr('x', (_, index) => scaleX(index))
       .attr('y', d => -dimensionsVolumeSVG.height)
       .attr('fill', d => d.open < d.close ? ' #01b61a ' : 'red')
-      .attr('height', d => dimensionsVolumeSVG.height - scaleVolume(d.volume))
+      .attr('height', d => dimensionsVolumeSVG.height - scaleVolume(d.volume/1000))
       .style('opacity', 0.5)
       
     
@@ -147,7 +143,7 @@ const CandlestickChart = ({ chartCandles, domain }:any) => {
         const zoomState = event.transform;
         setCurrentZoomState(zoomState);
 
-        /* Change the width of candlesticks when zooming */
+        /* TODO: Change the width of candlesticks when zooming */
         setWidthCandlestick(10*zoomState['k']*widthCandlestick)
         
       });

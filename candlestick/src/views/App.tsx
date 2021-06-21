@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 
 import convertFetchedData from '../utils/convertFetchedData'
-import getYDomain from '../utils/getYDomain'
+// import getYDomain from '../utils/getYDomain'
 
 import fetchChart from '../controllers/fetchChart'
 import CandlestickChart from './components/CandlestickChart/CandlestickChart'
@@ -14,7 +14,7 @@ import data from '../data/msft_response.json'
 const App = () => {
   const [chartData, setChartData] = useState(data)
   const [chartCandles, setChartCandles] = useState(convertFetchedData(chartData))
-  const [domain, setDomain] = useState<[number, number]>(getYDomain(chartCandles['dataArr']))
+  // const [domain, setDomain] = useState<[number, number]>(getYDomain(chartCandles['dataArr']))
   const [stockSymbol, setStockSymbol] = useState('')
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,13 +24,13 @@ const App = () => {
   
   useEffect(() => {
     setChartCandles(convertFetchedData(chartData))
-    setDomain(getYDomain(chartCandles['dataArr']))
+    // setDomain(getYDomain(chartCandles['dataArr']))
   }, [chartData])
 
   return (
     <>
       <StyledLabel>{chartCandles['meta'].symbol}</StyledLabel>
-      <CandlestickChart domain={domain} chartCandles={chartCandles} />
+      <CandlestickChart chartCandles={chartCandles} />
       <StyledInputDiv onChange={onChange}>
         <StyledInput />
         <StyledButton onClick={async () => {

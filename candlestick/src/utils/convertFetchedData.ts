@@ -1,4 +1,5 @@
 import { IData, IChart } from '../model/date.model'
+import getYDomain from './getYDomain'
 
 const convertFetchedData = (dataObj: any) => {
   const metaData: IData = {
@@ -20,8 +21,10 @@ const convertFetchedData = (dataObj: any) => {
   }
     
   )
+
+  const yDomain = getYDomain(chartDataArr)
       
-  return { meta: metaData, dataArr: chartDataArr }
+  return { meta: metaData, dataArr: chartDataArr, yDomain: yDomain }
 }
 
 
