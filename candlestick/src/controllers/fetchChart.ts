@@ -3,8 +3,8 @@ import convertFetchedData from '../utils/convertFetchedData'
 import data from '../data/msft_response.json'
 
 
-const fetchChart = async () => {
-  const BASE_URL = `https://alpha-vantage.p.rapidapi.com/query?function=TIME_SERIES_DAILY&symbol=MSFT&outputsize=compact&datatype=json`
+const fetchChart = async (symbol: string) => {
+  const BASE_URL = `https://alpha-vantage.p.rapidapi.com/query?function=TIME_SERIES_DAILY&symbol=${symbol}&outputsize=compact&datatype=json`
 
   try {
     const response: Response = await fetch(BASE_URL, {
@@ -15,13 +15,7 @@ const fetchChart = async () => {
         "x-rapidapi-host": `${process.env.REACT_APP_RAPID_HOST}`
       }
     })
-
-    const data = await response.json()
-
-    return data
-    // const dataConvereted = await convertFetchedData(data)
-
-    // return dataConvereted
+    return await response.json()
 
   } catch (err) {
     console.log('Error => ', err)

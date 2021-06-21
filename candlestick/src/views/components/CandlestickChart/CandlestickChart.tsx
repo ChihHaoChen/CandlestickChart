@@ -119,7 +119,7 @@ const CandlestickChart = ({ chartCandles, domain }:any) => {
     
     svgAxis
     .select('.x-axis')
-    .style('transform', `translateY(${dimensions.height}px)`)
+    .style('transform', `translateY(${height}px)`)
     .attr('class', 'x-axis')
     .call(xAxis)
     
@@ -134,7 +134,7 @@ const CandlestickChart = ({ chartCandles, domain }:any) => {
     svgVolumeAxis
       .select('.yVolume-axis')
       .join('g')
-      .style("transform", `translateX(${dimensions.width}px)`)
+      // .style("transform", `translateX(${width}px)`)
       .attr('class', 'yVolume-axis')
       .call(volumeAxis)
     
