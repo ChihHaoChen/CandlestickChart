@@ -1,25 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import ResizeObserver from 'resize-observer-polyfill'
-import { select, Selection, BaseType, scaleLinear, scaleBand, axisLeft, axisBottom, max, axisRight, zoom, zoomTransform } from 'd3'
+import { select, scaleLinear, scaleBand, axisLeft, axisBottom, max, axisRight, zoom, zoomTransform } from 'd3'
+
+import useResizeObserver from '../../../utils/customizedHooks/useResizeObserver'
 import { IData, IChart } from '../../../model/date.model'
-
-
-const useResizeObserver = (ref: any) => {
-  const [dimensions, setDimensions] = useState<DOMRectReadOnly | null>(null);
-  useEffect(() => {
-    const observeTarget = ref.current;
-    const resizeObserver = new ResizeObserver((entries) => {
-      entries.forEach((entry) => setDimensions(entry.contentRect));
-    });
-    resizeObserver.observe(observeTarget);
-    return () => {
-      resizeObserver.unobserve(observeTarget);
-    };
-  }, [ref]);
-  return dimensions;
-};
-
 
 
 const CandlestickChart = ({ chartCandles, domain }:any) => {
@@ -44,7 +28,6 @@ const CandlestickChart = ({ chartCandles, domain }:any) => {
   const svgCandlesticks = select(svgCandlesticksRef.current)
   const svgAxis = select(svgAxisRef.current)
 
-  let zoomState = { k: 0, x: 0, y: 0}
 
   useEffect(() => {
     if (!dimensions || !dimensionsVolumeSVG) return
@@ -114,7 +97,6 @@ const CandlestickChart = ({ chartCandles, domain }:any) => {
       .attr('width', x.bandwidth)
       .attr('x', d => x(d.date)!)
       .attr('y', d => -dimensionsVolumeSVG.height)
-      .transition()
       .attr('fill', d => d.open < d.close ? ' #01b61a ' : 'red')
       .attr('height', d => dimensionsVolumeSVG.height - scaleVolume(d.volume))
       .style('opacity', 0.5)
