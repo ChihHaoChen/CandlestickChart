@@ -1,7 +1,3 @@
-import { IData, IChart } from '../model/date.model'
-import convertFetchedData from '../utils/convertFetchedData'
-import data from '../data/msft_response.json'
-
 
 const fetchChart = async (symbol: string) => {
   const BASE_URL = `https://alpha-vantage.p.rapidapi.com/query?function=TIME_SERIES_DAILY&symbol=${symbol}&outputsize=compact&datatype=json`

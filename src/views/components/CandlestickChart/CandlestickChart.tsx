@@ -1,18 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import { select, extent, scaleTime, scaleLinear, scaleBand, axisLeft, axisBottom, max, axisRight, zoom, zoomTransform, NumberValue } from 'd3'
+import { select, scaleLinear, scaleBand, axisLeft, axisBottom, max, axisRight, zoom } from 'd3'
 
 import useResizeObserver from '../../../utils/customizedHooks/useResizeObserver'
-import { IData, IChart } from '../../../model/date.model'
+import { IChart } from '../../../model/date.model'
 
-
-const usePrevious = (value: any) => {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
 
 const CandlestickChart = ({ chartCandles }:any) => {
 
@@ -150,6 +142,7 @@ const CandlestickChart = ({ chartCandles }:any) => {
 
     svgCandlesticks.call(zoomBehavior)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [candles, dimensions, domain, dimensionsVolumeSVG, currentZoomState, widthCandlestick])
 
   return (

@@ -18,6 +18,8 @@ const convertFetchedData = (dataObj: any) => {
       close: value[`4. close`],
       volume: value[`5. volume`]
     }]
+
+    return chartDataArr
   }
     
   )
