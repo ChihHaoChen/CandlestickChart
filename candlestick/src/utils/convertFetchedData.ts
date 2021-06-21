@@ -8,7 +8,7 @@ const convertFetchedData = (dataObj: any) => {
 
   let chartDataArr: IChart[] = []
 
-  Object.entries(dataObj[`Time Series (Daily)`]).map(([key, value]: any) => {
+  Object.entries(dataObj[`Time Series (Daily)`]).slice(0).reverse().map(([key, value]: any) => {
     chartDataArr = [...chartDataArr, {
       date: key,
       open: value[`1. open`],

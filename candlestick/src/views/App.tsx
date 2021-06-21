@@ -20,7 +20,7 @@ const App = () => {
   useEffect(() => {
     setChartCandles(convertFetchedData(chartData))
     setDomain(getYDomain(chartCandles['dataArr']))
-  }, [chartCandles, chartData])
+  }, [chartData])
 
   return (
     <>
