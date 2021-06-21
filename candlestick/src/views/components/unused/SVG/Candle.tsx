@@ -1,7 +1,7 @@
 import { ScaleLinear } from 'd3-scale'
 
-import Line from '../SVG/Line'
-import Rect from '../SVG/Rect'
+import Line from './Line'
+import Rect from './Rect'
 
 const MARGIN = 2
 

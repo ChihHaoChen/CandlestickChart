@@ -1,34 +1,26 @@
 import React, { useState, useEffect } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
-import { IChart } from '../model/date.model'
+
 import convertFetchedData from '../utils/convertFetchedData'
+import getYDomain from '../utils/getYDomain'
+
 import fetchChart from '../controllers/fetchChart'
 import CandlestickChart from './components/CandlestickChart/CandlestickChart'
 
 
-
 import data from '../data/msft_response.json'
-
-const PADDING_HEIGHT = 20
-// const candles = data
-
-const getDomain = (rows: IChart[]): [number, number] => {
-  const values = rows.map(({high, low}:any) => [high, low]).flat()
-  return [Math.min(...values) - PADDING_HEIGHT, Math.max(...values) + PADDING_HEIGHT]
-}
-
 
 
 const App = () => {
   const [chartData, setChartData] = useState(data)
   const [chartCandles, setChartCandles] = useState(convertFetchedData(chartData))
-  const [domain, setDomain] = useState<[number, number]>(getDomain(chartCandles['dataArr']))
+  const [domain, setDomain] = useState<[number, number]>(getYDomain(chartCandles['dataArr']))
 
   
   useEffect(() => {
     setChartCandles(convertFetchedData(chartData))
-    setDomain(getDomain(chartCandles['dataArr']))
-  }, [chartData])
+    setDomain(getYDomain(chartCandles['dataArr']))
+  }, [chartCandles, chartData])
 
   return (
     <>
